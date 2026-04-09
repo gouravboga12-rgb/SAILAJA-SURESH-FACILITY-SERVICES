@@ -9,7 +9,7 @@
     "client:dev": "npm run dev --prefix client",
     "server:dev": "npm run dev --prefix server",
     "dev": "npm run client:dev",
-    "build": "npm run build --prefix client",
+    "build": "npm install --prefix client && npm run build --prefix client",
     "start": "npm start --prefix client"
   },
   "author": "",

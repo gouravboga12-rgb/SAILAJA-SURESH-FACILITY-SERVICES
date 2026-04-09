@@ -154,7 +154,7 @@ const About = () => {
             ))}
           </div>
         </div>
-      </section>section>
+      </section>
 
       {/* === MISSION, VISION, VALUES === */}
       <section className="bg-secondary/5 py-24 border-y border-secondary/10 mb-24">
