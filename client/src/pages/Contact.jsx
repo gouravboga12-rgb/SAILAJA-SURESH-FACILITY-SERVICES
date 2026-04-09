@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, MessageSquare, Send, CheckCircle, Clock, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageSquare, Send, CheckCircle, Clock } from 'lucide-react';
 
 const Contact = () => {
     const [submitted, setSubmitted] = useState(false);
@@ -69,17 +69,29 @@ const Contact = () => {
 
     return (
         <div className="bg-black pt-32 pb-24 min-h-screen">
-            {/* Header */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 text-center">
-                <h2 className="text-secondary font-bold tracking-[0.4em] uppercase mb-4" data-aos="fade-up">
-                    Get in Touch
-                </h2>
-                <h3 className="text-4xl md:text-7xl font-extrabold text-white mb-8" data-aos="fade-up" data-aos-delay="100">
-                    Contact <span className="text-gradient">Information</span>
-                </h3>
-                <p className="text-accent text-lg max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
-                    Have questions about our services or need a customized staffing quote? Reach out to us through any of the channels below.
-                </p>
+            {/* === HERO SECTION WITH BACKGROUND === */}
+            <section className="relative mb-24 overflow-hidden">
+                {/* Background Image Overlay */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="/images/contact_bg.png"
+                        alt="Professional contact background"
+                        className="w-full h-full object-cover opacity-20"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black"></div>
+                </div>
+
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+                    <h2 className="text-secondary font-bold tracking-[0.4em] uppercase mb-4" data-aos="fade-up">
+                        Get in Touch
+                    </h2>
+                    <h3 className="text-4xl md:text-7xl font-extrabold text-white mb-8" data-aos="fade-up" data-aos-delay="100">
+                        Contact <span className="text-gradient">Information</span>
+                    </h3>
+                    <p className="text-accent text-lg max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+                        Have questions about our services or need a customized staffing quote? Reach out to us through any of the channels below.
+                    </p>
+                </div>
             </section>
 
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,22 +116,6 @@ const Contact = () => {
                                 </div>
                             </a>
                         ))}
-
-                        {/* Social Links Card */}
-                        <div className="glass p-8 rounded-3xl border border-secondary/10 text-center">
-                            <p className="text-white font-bold text-sm uppercase tracking-widest mb-6">Social Presence</p>
-                            <div className="flex justify-center space-x-4">
-                               <a href="#" className="h-12 w-12 bg-secondary/10 flex items-center justify-center rounded-full text-secondary hover:bg-secondary hover:text-white transition-all shadow-lg">
-                                   <Linkedin className="h-6 w-6" />
-                               </a>
-                               <a href="#" className="h-12 w-12 bg-secondary/10 flex items-center justify-center rounded-full text-secondary hover:bg-secondary hover:text-white transition-all shadow-lg">
-                                   <Facebook className="h-6 w-6" />
-                               </a>
-                               <a href="#" className="h-12 w-12 bg-secondary/10 flex items-center justify-center rounded-full text-secondary hover:bg-secondary hover:text-white transition-all shadow-lg">
-                                   <Instagram className="h-6 w-6" />
-                               </a>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Contact Form */}

@@ -1,7 +1,7 @@
 import React from 'react';
 import IndustryCard from '../components/IndustryCard';
 import { 
-  Factory, HeartPulse, Building2, Laptop2, Warehouse, ShoppingCart, School, Construction 
+  Factory, Building2, FlaskConical, Warehouse 
 } from 'lucide-react';
 
 const Industries = () => {
@@ -12,39 +12,19 @@ const Industries = () => {
             desc: "Dedicated staffing for production lines, assembly, and industrial maintenance in factories and plants."
         },
         {
-            icon: HeartPulse,
-            title: "Healthcare",
-            desc: "Hygiene-centric housekeeping and support staff for hospitals, clinics, and diagnostic centers."
-        },
-        {
             icon: Building2,
             title: "Corporate Offices",
             desc: "Professional pantry, housekeeping, and front-desk support for modern business environments."
         },
         {
-            icon: Laptop2,
-            title: "Telecom",
-            desc: "Specialized installation services for BSNL WiFi and technical facility support for telecom hubs."
+            icon: FlaskConical,
+            title: "Pharma & Biotech",
+            desc: "Specialized lab assistants, housekeeping, and technical staff for pharmaceutical and biotech companies in Genome Valley."
         },
         {
             icon: Warehouse,
-            title: "Warehousing",
+            title: "Warehousing & Logistics",
             desc: "Packing, loading, and inventory management manpower for logistics and e-commerce centers."
-        },
-        {
-            icon: ShoppingCart,
-            title: "Retail & Malls",
-            desc: "Crowd management, housekeeping, and maintenance staff for large commercial retail spaces."
-        },
-        {
-            icon: School,
-            title: "Education",
-            desc: "Safe and reliable housekeeping and pantry staff for schools, colleges, and training institutes."
-        },
-        {
-            icon: Construction,
-            title: "Real Estate",
-            desc: "Post-construction cleaning and technical maintenance for residential and commercial complexes."
         }
     ];
 

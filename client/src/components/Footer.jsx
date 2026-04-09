@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, MessageSquare } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageSquare } from 'lucide-react';
 import logo from '../assets/logo.jpg';
 
 const Footer = () => {
@@ -22,21 +22,6 @@ const Footer = () => {
                         <p className="text-accent text-base leading-relaxed max-w-xl">
                             Premier staffing and facility management solutions across various industries. We provide professional, reliable, and skilled manpower to meet your dynamic business needs.
                         </p>
-                    </div>
-                    
-                    <div className="flex flex-col items-start lg:items-end">
-                        <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Connect With Us</h4>
-                        <div className="flex space-x-4">
-                            <a href="#" className="h-12 w-12 glass border border-white/10 flex items-center justify-center rounded-2xl text-secondary hover:border-highlight hover:text-highlight hover:-translate-y-1 transition-all duration-300">
-                                <Linkedin className="h-6 w-6" />
-                            </a>
-                            <a href="#" className="h-12 w-12 glass border border-white/10 flex items-center justify-center rounded-2xl text-secondary hover:border-highlight hover:text-highlight hover:-translate-y-1 transition-all duration-300">
-                                <Facebook className="h-6 w-6" />
-                            </a>
-                            <a href="#" className="h-12 w-12 glass border border-white/10 flex items-center justify-center rounded-2xl text-secondary hover:border-highlight hover:text-highlight hover:-translate-y-1 transition-all duration-300">
-                                <Instagram className="h-6 w-6" />
-                            </a>
-                        </div>
                     </div>
                 </div>
 

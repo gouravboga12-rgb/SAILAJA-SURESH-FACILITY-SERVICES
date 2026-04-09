@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { ChevronRight, Plus, Minus } from 'lucide-react';
+import { ChevronRight, Plus, Minus, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ServiceCard = ({ icon: Icon, image, title, shortDesc, longDesc }) => {
+const ServiceCard = ({ icon: Icon, image, title, shortDesc, longDesc, highlights = [] }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     return (
         <motion.div 
             layout
-            className="group glass rounded-3xl overflow-hidden border border-white/10 hover:border-highlight/50 transition-all duration-500 flex flex-col h-full shadow-lg hover:shadow-highlight/20"
+            className="group glass rounded-3xl overflow-hidden border border-white/10 hover:border-highlight/50 transition-all duration-500 flex flex-col shadow-lg hover:shadow-highlight/20"
             data-aos="zoom-in"
         >
             {/* Service Image Section */}
@@ -50,9 +50,33 @@ const ServiceCard = ({ icon: Icon, image, title, shortDesc, longDesc }) => {
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
                             className="overflow-hidden"
                         >
-                            <p className="text-accent/60 text-xs leading-relaxed pt-6 border-t border-white/10 italic">
-                                {longDesc}
-                            </p>
+                            <div className="pt-6 border-t border-white/10 space-y-6">
+                                <p className="text-accent/60 text-xs leading-relaxed italic">
+                                    {longDesc}
+                                </p>
+                                
+                                {highlights.length > 0 && (
+                                    <div className="space-y-4">
+                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Core Responsibilities</p>
+                                        <ul className="space-y-3">
+                                            {highlights.map((point, idx) => (
+                                                <motion.li 
+                                                    key={idx}
+                                                    initial={{ x: -10, opacity: 0 }}
+                                                    animate={{ x: 0, opacity: 1 }}
+                                                    transition={{ delay: idx * 0.1 }}
+                                                    className="flex items-start space-x-3 text-accent/80 text-xs"
+                                                >
+                                                    <div className="mt-1 bg-highlight/20 p-0.5 rounded-full flex-shrink-0">
+                                                        <CheckCircle2 className="h-3 w-3 text-highlight" />
+                                                    </div>
+                                                    <span className="leading-relaxed">{point}</span>
+                                                </motion.li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
                         </motion.div>
                     )}
                 </AnimatePresence>

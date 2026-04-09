@@ -24,15 +24,15 @@ const Hero = () => {
                             <span className="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-[0.2em] uppercase bg-secondary/30 text-highlight border border-white/10 rounded-full backdrop-blur-sm">
                                 Premium Staffing Solutions
                             </span>
-                            <h1 className="text-4xl md:text-6xl lg:text-8xl font-extrabold text-white leading-[1.05]">
-                                Empowering <br />
+                            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] lg:leading-[1.05]">
+                                Empowering <br className="lg:hidden" />
                                 <span className="text-white">Businesses with</span> <br />
                                 <span className="text-gradient">Professional Talent.</span>
                             </h1>
                         </div>
                         
-                        <p className="text-accent text-lg md:text-xl max-w-xl leading-relaxed font-medium">
-                            Sailaja Suresh Facility Services provides top-tier manpower specialized in housekeeping, production, and technical facility management.
+                        <p className="text-white/90 text-lg md:text-xl max-w-2xl leading-relaxed font-medium border-l-4 border-highlight pl-6 py-2" data-aos="fade-up" data-aos-delay="300">
+                            <span className="text-white font-bold">Sailaja Suresh Facility Services</span> provides top-tier manpower specialized in <span className="text-highlight font-bold">housekeeping</span>, <span className="text-highlight font-bold">production</span>, and <span className="text-highlight font-bold">technical facility management</span>.
                         </p>
                         
                         <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -55,19 +55,19 @@ const Hero = () => {
                         </div>
 
                         {/* Stats/Proof */}
-                        <div className="flex items-center space-x-10 pt-10 border-t border-white/10 translate-y-4">
-                            <div className="group cursor-default">
-                                <p className="text-3xl font-bold text-white group-hover:text-highlight transition-colors">100%</p>
+                        <div className="flex items-center space-x-6 sm:space-x-10 pt-10 border-t border-white/10 translate-y-4">
+                            <div className="group cursor-default min-w-fit">
+                                <p className="text-2xl sm:text-3xl font-bold text-white group-hover:text-highlight transition-colors">100%</p>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/60">Reliability</p>
                             </div>
-                            <div className="h-12 w-[1px] bg-white/10"></div>
-                            <div className="group cursor-default">
-                                <p className="text-3xl font-bold text-white group-hover:text-highlight transition-colors">24/7</p>
+                            <div className="h-10 w-[1px] bg-white/10"></div>
+                            <div className="group cursor-default min-w-fit">
+                                <p className="text-2xl sm:text-3xl font-bold text-white group-hover:text-highlight transition-colors">24/7</p>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/60">Support</p>
                             </div>
-                            <div className="h-12 w-[1px] bg-white/10"></div>
-                            <div className="group cursor-default">
-                                <p className="text-3xl font-bold text-white group-hover:text-highlight transition-colors">Expert</p>
+                            <div className="h-10 w-[1px] bg-white/10"></div>
+                            <div className="group cursor-default min-w-fit">
+                                <p className="text-2xl sm:text-3xl font-bold text-white group-hover:text-highlight transition-colors">Expert</p>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/60">Staff</p>
                             </div>
                         </div>

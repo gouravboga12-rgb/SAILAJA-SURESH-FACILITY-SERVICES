@@ -1,143 +1,530 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Hero from '../components/Hero';
 import ServiceCard from '../components/ServiceCard';
 import IndustryCard from '../components/IndustryCard';
-import { 
-  Users, Home as HomeIcon, UserCheck, Coffee, Package, Wifi, Camera, Zap, Fan, 
-  Building2, Laptop2, HeartPulse, Factory, Warehouse, Trophy, ShieldCheck, Clock
-} from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  Users, UserCheck, Coffee, Package, Camera, Zap, Fan, Search,
+  Building2, Factory, Warehouse, FlaskConical, Trophy, ShieldCheck,
+  Clock, Target, Eye, Heart, CheckCircle2, MapPin, Star, Handshake,
+  TrendingUp, Phone, Mail, MessageSquare, Send, CheckCircle,
+  ArrowRight, Sparkles, X, Check
+} from 'lucide-react';
 
 const Home = () => {
-  const topServices = [
+
+  // ── SERVICES DATA ──────────────────────────────────────
+  const allServices = [
     {
       icon: Users,
       image: "/images/housekeeping.png",
-      title: "Housekeeping",
-      shortDesc: "Professional boys and ladies for immaculate facility maintenance.",
-      longDesc: "Our housekeeping staff is trained in modern cleaning techniques, safety protocols, and guest relations to ensure your facility remains pristine and professional at all times."
+      title: "Premium Facility Housekeeping",
+      shortDesc: "Professional staff for immaculate facility maintenance.",
+      longDesc: "Our housekeeping staff is trained in modern cleaning techniques, safety protocols, and guest relations to ensure your facility remains pristine at all times.",
+      highlights: [
+        "Daily floor scrubbing and specialized sanitation of high-touch surfaces.",
+        "Professional washroom hygiene management and restocking.",
+        "Waste segregation and eco-friendly disposal protocols.",
+        "Dusting and maintenance of intricate office fixtures and furniture.",
+        "Periodic deep cleaning of carpets, upholstery, and glass facades."
+      ]
     },
     {
       icon: UserCheck,
-      image: "/images/production.png",
-      title: "Production Staff",
-      shortDesc: "Skilled manpower for manufacturing and production lines.",
-      longDesc: "We provide experienced production assistants who understand factory workflows, safety requirements, and quality control measures to keep your operations running smoothly."
+      image: "/images/production_support.png",
+      title: "Industrial Production Support",
+      shortDesc: "Skilled manpower for assembly lines and factory floors.",
+      longDesc: "Staff trained in industrial safety, machine operations assistance, and production line efficiency. We ensure our staff adheres to your specific SOPs.",
+      highlights: [
+        "Assisting in assembly line operations with high precision and speed.",
+        "On-floor material handling and raw material feeding to machines.",
+        "Quality check assistance and packaging of finished goods.",
+        "Maintaining production floor cleanliness and safety compliance.",
+        "Assisting machine operators in setup and routine maintenance tasks."
+      ]
     },
     {
       icon: Coffee,
       image: "/images/pantry.png",
-      title: "Pantry Boys",
+      title: "Corporate Pantry & Hospitality",
       shortDesc: "Dedicated staff for corporate pantry and refreshments.",
-      longDesc: "Professional pantry staff trained in hygiene, food handling, and corporate etiquette to manage your office refreshments and hospitality needs."
+      longDesc: "Professional pantry staff trained in hygiene, food handling, and corporate etiquette to manage your office refreshments and hospitality needs.",
+      highlights: [
+        "Managing tea/coffee vending machines and serving hot beverages.",
+        "Serving refreshments and snacks for corporate meetings and guests.",
+        "Maintaining pantry cleanliness, hygiene, and kitchenware sanitization.",
+        "Organizing and managing office lunch arrangements and catering.",
+        "Regular inventory checks and procurement of pantry essentials."
+      ]
+    },
+    {
+      icon: Search,
+      image: "/images/lab_technical_assistance.png",
+      title: "Laboratory Technical Assistance",
+      shortDesc: "Support staff for laboratory and technical testing areas.",
+      longDesc: "Assisting technicians in material handling, equipment cleaning, and sample management with strict adherence to safety and hygiene protocols.",
+      highlights: [
+        "Handling and organizing laboratory samples under technician guidance.",
+        "Cleaning and sterilizing lab equipment between sessions.",
+        "Maintaining chemical and material stock records accurately.",
+        "Supporting QC personnel in documentation and data entry tasks.",
+        "Ensuring lab hygiene per GMP and safety regulations."
+      ]
+    },
+    {
+      icon: Package,
+      image: "/images/packing.png",
+      title: "Packaging & Logistics Personnel",
+      shortDesc: "Reliable staff for packing, sorting, and logistics.",
+      longDesc: "Trained packing and sorting workforce to support your warehouse and logistics operations with speed, accuracy, and consistency.",
+      highlights: [
+        "High-speed manual packing with accuracy and quality standards.",
+        "Labeling and barcode scanning for warehouse inventory accuracy.",
+        "Bubble wrapping and protective cushioning for fragile items.",
+        "Weighing and dimensioning of finished packages for logistics.",
+        "Maintaining organized shipping zones and packing inventory."
+      ]
+    },
+    {
+      icon: Camera,
+      image: "/images/cctv_installation.png",
+      title: "Security & Surveillance (CCTV)",
+      shortDesc: "Comprehensive CCTV installation and network surveillance solutions.",
+      longDesc: "Professional end-to-end security solutions including strategic camera placement, advanced network configuration, and high-definition monitoring systems.",
+      highlights: [
+        "Full-scale site analysis for blind-spot-free surveillance coverage.",
+        "Expert installation of HD-IP and Analog cameras with night vision.",
+        "Centralized Monitoring System (CMS) & NVR/DVR storage configuration.",
+        "Seamless mobile integration for real-time remote viewing access.",
+        "Preventive maintenance including lens cleaning and wiring health checks."
+      ]
+    },
+    {
+      icon: Zap,
+      image: "/images/electrical.png",
+      title: "Electrical & Technical Maintenance",
+      shortDesc: "Skilled technicians for electrical and facility maintenance.",
+      longDesc: "Preventive maintenance, wiring repairs, fixture installations, and specialized filter cleaning for industrial and commercial systems.",
+      highlights: [
+        "Periodic inspection and testing of electrical panels and DB boards.",
+        "Repair and replacement of faulty wiring, switches, and fixtures.",
+        "Water filter and RO system maintenance and cartridge replacement.",
+        "Emergency breakdown response for minimal operational downtime.",
+        "Energy-efficient lighting upgrades and power optimization."
+      ]
+    },
+    {
+      icon: Fan,
+      image: "/images/hvac.png",
+      title: "HVAC Operations & Management",
+      shortDesc: "Air conditioning operations and preventive maintenance.",
+      longDesc: "Our AC technicians handle everything from routine servicing to emergency repairs, ensuring optimal climate control in your facility.",
+      highlights: [
+        "Regular cleaning and servicing of split and central AC units.",
+        "Gas refilling, coil cleaning, and filter replacement services.",
+        "Preventive maintenance schedules to extend equipment lifespan.",
+        "Diagnosis and repair of cooling capacity and drainage issues.",
+        "Installation support for new commercial AC systems."
+      ]
     }
   ];
 
+  // ── ABOUT DATA ─────────────────────────────────────────
+  const missionPoints = [
+    "Provide reliable, trained, and efficient manpower to businesses of all sizes.",
+    "Ensure quality service, timely deployment, and client satisfaction in every project.",
+    "Support industries with cost-effective staffing solutions without compromising quality.",
+  ];
+  const visionPoints = [
+    "Become the leading manpower service provider in Telangana.",
+    "Expand services across multiple sectors while maintaining trust and consistency.",
+    "Create meaningful employment opportunities for the local workforce.",
+  ];
+  const coreValues = [
+    { title: 'Integrity', desc: 'Honesty and full transparency with every client.' },
+    { title: 'Reliability', desc: 'Delivering what we promise, every single time.' },
+    { title: 'Quality', desc: 'Trained, verified, and discipline-focused manpower.' },
+    { title: 'Customer Focus', desc: 'Prioritizing your operational needs above all.' },
+    { title: 'Professionalism', desc: 'High industry standards in every engagement.' },
+  ];
+
+  // ── INDUSTRIES DATA ────────────────────────────────────
   const industries = [
-    { icon: Factory, title: "Manufacturing", desc: "Specialized staffing for production lines and factory operations." },
-    { icon: HeartPulse, title: "Healthcare", desc: "Hygiene-focused housekeeping for hospitals and clinics." },
-    { icon: Building2, title: "Corporate Offices", desc: "Pantry and maintenance staff for modern business hubs." },
-    { icon: Laptop2, title: "Telecom", desc: "Technical support and BSNL WiFi connection services." },
-    { icon: Warehouse, title: "Warehousing", desc: "Packing and loading manpower for logistics centers." }
+    { icon: Factory, title: "Manufacturing", desc: "Specialized staffing for production lines, assembly, and industrial maintenance." },
+    { icon: Building2, title: "Corporate Offices", desc: "Pantry, housekeeping, and maintenance staff for modern business environments." },
+    { icon: FlaskConical, title: "Pharma & Biotech", desc: "Lab assistants and housekeeping for Genome Valley pharmaceutical companies." },
+    { icon: Warehouse, title: "Warehousing & Logistics", desc: "Packing, loading, and inventory management manpower for logistics centers." },
+  ];
+
+  // ── LOCATIONS DATA ─────────────────────────────────────
+  const hubs = [
+    {
+      icon: FlaskConical,
+      name: "Genome Valley",
+      district: "Shamirpet, Secunderabad",
+      tag: "Life Sciences & Biotech Hub",
+      tagColor: "bg-green-500/20 text-green-400 border-green-500/30",
+      image: "https://images.pexels.com/photos/3825586/pexels-photo-3825586.jpeg?auto=compress&cs=tinysrgb&w=800",
+      desc: "A leading life sciences and biotech hub with high demand for lab assistants, housekeeping, and maintenance staff.",
+    },
+    {
+      icon: Factory,
+      name: "Medchal–Malkajgiri",
+      district: "North Hyderabad Region",
+      tag: "Industrial & Manufacturing Zone",
+      tagColor: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+      image: "https://images.pexels.com/photos/1267338/pexels-photo-1267338.jpeg?auto=compress&cs=tinysrgb&w=800",
+      desc: "One of the fastest-growing industrial zones with factories, warehouses, and production units needing reliable manpower.",
+    },
+    {
+      icon: Building2,
+      name: "Siddipet District",
+      district: "Siddipet, Telangana",
+      tag: "Emerging Commercial Hub",
+      tagColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+      image: "https://images.pexels.com/photos/534220/pexels-photo-534220.jpeg?auto=compress&cs=tinysrgb&w=800",
+      desc: "An emerging area with growing infrastructure, businesses, and commercial establishments requiring quality facility services.",
+    }
+  ];
+
+  const stats = [
+    { number: "200+", label: "Client Companies Served" },
+    { number: "100+", label: "Workers Deployed" },
+    { number: "95%", label: "Client Satisfaction" },
+    { number: "24–48h", label: "Deployment Time" },
+  ];
+
+  // ── CONTACT STATE ──────────────────────────────────────
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setTimeout(() => { setLoading(false); setSubmitted(true); }, 1500);
+  };
+  const contactDetails = [
+    { icon: Phone, title: "Phone Number", value: "+91 8897230178", link: "tel:8897230178", desc: "Mon-Sat from 9am to 6pm." },
+    { icon: Mail, title: "Email Address", value: "goudsuresh540@gmail.com", link: "mailto:goudsuresh540@gmail.com", desc: "Reply within 24 hours." },
+    { icon: MessageSquare, title: "WhatsApp Chat", value: "Chat with Us", link: "https://wa.me/918897230178", desc: "Instant support for urgent needs." },
+    { icon: Clock, title: "Working Hours", value: "24/7 Operations", link: "#", desc: "For existing facility contracts." },
   ];
 
   return (
     <div className="bg-black">
+
+      {/* ══════════════════════════ HERO ══════════════════════════ */}
       <Hero />
 
-      {/* Services Section */}
-      <section className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ══════════════════════ SERVICES ══════════════════════════ */}
+      <section id="services" className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div className="max-w-2xl" data-aos="fade-right">
-            <h2 className="text-sm font-bold tracking-[0.3em] uppercase text-secondary mb-4 underline decoration-highlight decoration-2 underline-offset-8">
-              What We Offer
-            </h2>
-            <h3 className="text-3xl md:text-5xl font-extrabold text-white">
-              Comprehensive <span className="text-gradient">Facility Solutions</span>
-            </h3>
+            <h2 className="text-sm font-bold tracking-[0.3em] uppercase text-secondary mb-4 underline decoration-highlight decoration-2 underline-offset-8">What We Offer</h2>
+            <h3 className="text-3xl md:text-5xl font-extrabold text-white">Comprehensive <span className="text-gradient">Facility Solutions</span></h3>
           </div>
-          <Link to="/services" className="text-highlight font-bold flex items-center hover:underline group" data-aos="fade-left">
+          <Link to="/services" className="hidden md:flex text-highlight font-bold items-center hover:underline group" data-aos="fade-left">
             View All Services <span className="ml-2 transition-transform group-hover:translate-x-2">→</span>
           </Link>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {topServices.map((service, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+          {allServices.map((service, index) => (
             <ServiceCard key={index} {...service} />
           ))}
         </div>
+        <div className="mt-12 text-center md:hidden" data-aos="fade-up">
+          <Link to="/services" className="inline-flex items-center text-highlight font-bold hover:underline group">
+            View All Services <span className="ml-2 transition-transform group-hover:translate-x-2">→</span>
+          </Link>
+        </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-24 bg-secondary/5 border-y border-secondary/10 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* ══════════════════════ WHY CHOOSE US ═════════════════════ */}
+      <section className="py-24 bg-secondary/5 border-y border-secondary/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16" data-aos="fade-up">
             <h2 className="text-sm font-bold tracking-[0.3em] uppercase text-secondary mb-4">Our Advantage</h2>
-            <h3 className="text-3xl md:text-5xl font-extrabold text-white">Why Choose Sailaja Suresh?</h3>
+            <h3 className="text-3xl md:text-5xl font-extrabold text-white">Why Choose <span className="text-gradient">Sailaja Suresh?</span></h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: Trophy, title: "Experienced Leadership", desc: "Guided by Thatikonda Suresh Goud, we bring years of industry expertise to every client engagement." },
+              { icon: ShieldCheck, title: "Vetted Professionals", desc: "Every staff member undergoes rigorous background checks and professional training before deployment." },
+              { icon: Clock, title: "24/7 Responsiveness", desc: "Our support team is always available to handle emergencies and sudden manpower requirements." },
+            ].map((item, i) => (
+              <div key={i} className="p-8 text-center space-y-4" data-aos="zoom-in" data-aos-delay={i * 100}>
+                <div className="bg-highlight/10 h-16 w-16 rounded-full flex items-center justify-center mx-auto text-highlight mb-4">
+                  <item.icon className="h-8 w-8" />
+                </div>
+                <h4 className="text-xl font-bold text-white">{item.title}</h4>
+                <p className="text-accent text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════ ABOUT ══════════════════════════════ */}
+      <section id="about" className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16" data-aos="fade-up">
+          <h2 className="text-sm font-bold tracking-[0.3em] uppercase text-secondary mb-3">Our Story</h2>
+          <h3 className="text-3xl md:text-5xl font-extrabold text-white">About <span className="text-gradient">Our Company</span></h3>
+          <p className="text-accent mt-4 max-w-3xl mx-auto leading-relaxed">
+            A trusted third-party manpower service provider delivering skilled and semi-skilled workforce across multiple industries. We bridge the gap between right talent and right opportunity.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
+          {/* Mission */}
+          <div className="glass p-8 rounded-3xl border border-secondary/10 space-y-5" data-aos="fade-up" data-aos-delay="100">
+            <div className="h-14 w-14 bg-highlight/10 rounded-2xl flex items-center justify-center text-highlight">
+              <Target className="h-7 w-7" />
+            </div>
+            <h4 className="text-xl font-bold text-white">Our Mission</h4>
+            <ul className="space-y-3">
+              {missionPoints.map((pt, i) => (
+                <li key={i} className="flex items-start gap-3 text-accent text-sm leading-relaxed">
+                  <CheckCircle2 className="h-4 w-4 text-highlight flex-shrink-0 mt-0.5" />
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 text-center space-y-4" data-aos="zoom-in" data-aos-delay="100">
-              <div className="bg-highlight/10 h-16 w-16 rounded-full flex items-center justify-center mx-auto text-highlight mb-4">
-                <Trophy className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-bold text-white">Experienced Leadership</h4>
-              <p className="text-accent text-sm leading-relaxed">Guided by Thatikonda Suresh Goud, we bring years of industry expertise to every client engagement.</p>
+          {/* Vision */}
+          <div className="glass p-8 rounded-3xl border border-secondary/10 space-y-5" data-aos="fade-up" data-aos-delay="200">
+            <div className="h-14 w-14 bg-highlight/10 rounded-2xl flex items-center justify-center text-highlight">
+              <Eye className="h-7 w-7" />
             </div>
-            
-            <div className="p-8 text-center space-y-4" data-aos="zoom-in" data-aos-delay="200">
-              <div className="bg-highlight/10 h-16 w-16 rounded-full flex items-center justify-center mx-auto text-highlight mb-4">
-                <ShieldCheck className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-bold text-white">Vetted Professionals</h4>
-              <p className="text-accent text-sm leading-relaxed">Every staff member undergoes rigorous background checks and professional training before deployment.</p>
-            </div>
+            <h4 className="text-xl font-bold text-white">Our Vision</h4>
+            <ul className="space-y-3">
+              {visionPoints.map((pt, i) => (
+                <li key={i} className="flex items-start gap-3 text-accent text-sm leading-relaxed">
+                  <CheckCircle2 className="h-4 w-4 text-highlight flex-shrink-0 mt-0.5" />
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            <div className="p-8 text-center space-y-4" data-aos="zoom-in" data-aos-delay="300">
-              <div className="bg-highlight/10 h-16 w-16 rounded-full flex items-center justify-center mx-auto text-highlight mb-4">
-                <Clock className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-bold text-white">24/7 Responsiveness</h4>
-              <p className="text-accent text-sm leading-relaxed">Our support team is always available to handle emergencies and sudden manpower requirements.</p>
+          {/* Values */}
+          <div className="glass p-8 rounded-3xl border border-secondary/10 space-y-5" data-aos="fade-up" data-aos-delay="300">
+            <div className="h-14 w-14 bg-highlight/10 rounded-2xl flex items-center justify-center text-highlight">
+              <Heart className="h-7 w-7" />
+            </div>
+            <h4 className="text-xl font-bold text-white">Core Values</h4>
+            <ul className="space-y-3">
+              {coreValues.map((val) => (
+                <li key={val.title} className="flex items-start gap-3 text-accent text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-highlight flex-shrink-0 mt-0.5" />
+                  <span><strong className="text-white">{val.title}:</strong> {val.desc}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Founder Message */}
+        <div className="glass p-10 md:p-14 rounded-[3rem] border border-secondary/20 relative overflow-hidden" data-aos="zoom-in">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-highlight/5 rounded-full blur-[80px]"></div>
+          <div className="relative z-10 flex flex-col items-center text-center space-y-6">
+            <h3 className="text-2xl md:text-4xl font-extrabold text-white">Meet Our Founder</h3>
+            <div className="w-20 h-1 bg-highlight rounded-full"></div>
+            <p className="text-accent text-lg italic font-serif max-w-3xl leading-relaxed">
+              "Our goal is not just to provide workers, but to provide specialists who take pride in their work. A clean and well-managed facility is the cornerstone of any successful business."
+            </p>
+            <div>
+              <p className="text-white font-bold text-xl uppercase tracking-widest">THATIKONDA SURESH GOUD</p>
+              <p className="text-highlight text-sm font-bold uppercase tracking-[0.2em] mt-1">Managing Director</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 pt-2">
+              <a href="tel:8897230178" className="flex items-center gap-2 text-white bg-secondary/20 px-5 py-3 rounded-full hover:bg-secondary transition-all text-sm font-bold"><Phone className="h-4 w-4" /> 8897230178</a>
+              <a href="mailto:goudsuresh540@gmail.com" className="flex items-center gap-2 text-white bg-secondary/20 px-5 py-3 rounded-full hover:bg-secondary transition-all text-sm font-bold"><Mail className="h-4 w-4" /> goudsuresh540@gmail.com</a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Industries Served */}
-      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ══════════════════════ INDUSTRIES ═════════════════════════ */}
+      <section id="industries" className="py-24 bg-secondary/5 border-y border-secondary/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16" data-aos="fade-up">
+            <h2 className="text-sm font-bold tracking-[0.3em] uppercase text-secondary mb-4">Market Focus</h2>
+            <h3 className="text-3xl md:text-5xl font-extrabold text-white">Industries <span className="text-gradient">We Serve</span></h3>
+            <p className="text-accent mt-4 max-w-2xl mx-auto text-sm">Tailored facility management and staffing solutions for the specific demands of each sector.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            {industries.map((ind, index) => (
+              <IndustryCard key={index} icon={ind.icon} title={ind.title} description={ind.desc} />
+            ))}
+          </div>
+          <div className="text-center">
+            <Link to="/industries" className="inline-flex items-center gap-2 text-highlight font-bold hover:underline group">
+              View All Industries <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════ LOCATIONS ══════════════════════════ */}
+      <section id="locations" className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-sm font-bold tracking-[0.3em] uppercase text-secondary mb-4">Market Focus</h2>
-          <h3 className="text-3xl md:text-5xl font-extrabold text-white">Industries We Serve</h3>
+          <h2 className="text-sm font-bold tracking-[0.3em] uppercase text-secondary mb-3">Where We Operate</h2>
+          <h3 className="text-3xl md:text-5xl font-extrabold text-white">Serving Key <span className="text-gradient">Industrial Hubs</span></h3>
+          <p className="text-accent mt-4 max-w-3xl mx-auto leading-relaxed">
+            Strong local presence in <span className="text-white font-semibold">Genome Valley</span>, <span className="text-white font-semibold">Medchal–Malkajgiri</span>, and <span className="text-white font-semibold">Siddipet</span> ensures fast, efficient staffing.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {industries.map((ind, index) => (
-            <IndustryCard key={index} icon={ind.icon} title={ind.title} description={ind.desc} />
+        {/* Stats Bar */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {stats.map((stat, i) => (
+            <div key={i} className="glass rounded-2xl border border-white/10 p-6 text-center" data-aos="zoom-in" data-aos-delay={i * 80}>
+              <p className="text-3xl md:text-4xl font-extrabold text-white mb-1">{stat.number}</p>
+              <p className="text-accent/70 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
+            </div>
           ))}
         </div>
+
+        {/* Hub Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          {hubs.map((hub, idx) => (
+            <div
+              key={idx}
+              className="glass rounded-3xl border border-white/10 hover:border-highlight/50 transition-all duration-500 overflow-hidden group"
+              data-aos="zoom-in"
+              data-aos-delay={idx * 100}
+            >
+              <div className="relative h-44 overflow-hidden">
+                <img src={hub.image} alt={hub.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                <div className="absolute bottom-4 left-5">
+                  <span className={`text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full border backdrop-blur-sm ${hub.tagColor}`}>{hub.tag}</span>
+                </div>
+              </div>
+              <div className="p-7">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="bg-highlight/10 p-2 rounded-xl border border-highlight/20 text-highlight">
+                    <hub.icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-extrabold text-white group-hover:text-highlight transition-colors">{hub.name}</h4>
+                    <p className="text-accent/60 text-[10px] font-semibold uppercase tracking-widest flex items-center gap-1">
+                      <MapPin className="h-2.5 w-2.5" /> {hub.district}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-accent/80 text-sm leading-relaxed">{hub.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <Link to="/locations" className="inline-flex items-center gap-2 text-highlight font-bold hover:underline group">
+            View Full Locations Page <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </section>
 
-      {/* CTA Banner */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" data-aos="zoom-in">
+      {/* ══════════════════════ CONTACT ════════════════════════════ */}
+      <section id="contact" className="py-24 bg-secondary/5 border-t border-secondary/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16" data-aos="fade-up">
+            <h2 className="text-sm font-bold tracking-[0.3em] uppercase text-secondary mb-3">Get in Touch</h2>
+            <h3 className="text-3xl md:text-5xl font-extrabold text-white">Contact <span className="text-gradient">Information</span></h3>
+            <p className="text-accent mt-4 max-w-2xl mx-auto">Have questions or need a staffing quote? Reach out through any of the channels below.</p>
+          </div>
+
+          {submitted ? (
+            <div className="glass p-12 rounded-[3rem] max-w-2xl mx-auto text-center border border-secondary/20 shadow-2xl" data-aos="zoom-in">
+              <div className="h-24 w-24 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-green-500/30">
+                <CheckCircle className="h-12 w-12 text-green-500" />
+              </div>
+              <h4 className="text-3xl font-extrabold text-white mb-4">Message Sent!</h4>
+              <p className="text-accent mb-8">We've received your message. Our team will get back to you shortly.</p>
+              <button onClick={() => setSubmitted(false)} className="bg-secondary hover:bg-highlight text-white px-10 py-4 rounded-full font-bold transition-all">
+                SEND ANOTHER MESSAGE
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+              {/* Contact Channels */}
+              <div className="lg:col-span-1 space-y-5" data-aos="fade-right">
+                {contactDetails.map((item, i) => (
+                  <a key={i} href={item.link} className="block glass p-6 rounded-3xl border border-secondary/10 hover:border-highlight/40 transition-all hover:-translate-y-1 group">
+                    <div className="flex items-center gap-5">
+                      <div className="h-11 w-11 bg-secondary/20 rounded-xl flex items-center justify-center text-highlight flex-shrink-0 group-hover:bg-highlight group-hover:text-white transition-all">
+                        <item.icon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-white font-bold text-xs uppercase tracking-widest">{item.title}</p>
+                        <p className="text-white text-sm font-bold truncate">{item.value}</p>
+                        <p className="text-accent text-xs">{item.desc}</p>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+
+              {/* Contact Form */}
+              <div className="lg:col-span-2" data-aos="fade-left">
+                <div className="glass p-8 md:p-12 rounded-[3.5rem] border border-secondary/20 shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-highlight/5 rounded-full blur-[100px]"></div>
+                  <h4 className="text-2xl font-bold text-white mb-8 relative z-10 flex items-center gap-3">
+                    <Send className="text-secondary" /> Submit an Inquiry
+                  </h4>
+                  <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Full Name</label>
+                        <input required type="text" placeholder="John Doe" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Email Address</label>
+                        <input required type="email" placeholder="john@company.com" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Service Interest</label>
+                      <select className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all appearance-none cursor-pointer">
+                        <option value="general">General Inquiry</option>
+                        <option value="staffing">Staffing Solutions</option>
+                        <option value="technical">Technical Maintenance</option>
+                        <option value="hiring">Hiring Talent</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Your Message</label>
+                      <textarea required rows="5" placeholder="How can we help you today?" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30 resize-none"></textarea>
+                    </div>
+                    <button
+                      disabled={loading}
+                      type="submit"
+                      className={`w-full py-5 rounded-2xl font-bold text-white flex items-center justify-center gap-3 transition-all ${loading ? 'bg-secondary/50 cursor-not-allowed' : 'bg-secondary hover:bg-highlight shadow-2xl shadow-secondary/30 hover:scale-[1.01]'}`}
+                    >
+                      {loading ? <span className="animate-pulse tracking-widest uppercase">Transmitting...</span> : <><Send className="h-5 w-5" /><span className="tracking-widest uppercase">Dispatch Message</span></>}
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ══════════════════════ FINAL CTA ══════════════════════════ */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-24" data-aos="zoom-in">
         <div className="bg-gradient-to-r from-secondary to-highlight rounded-3xl p-12 text-center relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 relative z-10">
-            Ready to enhance your facility operations?
-          </h2>
-          <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto relative z-10">
-            Join hundreds of businesses that trust Sailaja Suresh Facility Services for their staffing needs.
-          </p>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 relative z-10">Ready to enhance your facility operations?</h2>
+          <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto relative z-10">Join hundreds of businesses that trust Sailaja Suresh Facility Services for their staffing needs.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
-            <Link to="/hire-talent" className="bg-white text-secondary hover:bg-black hover:text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl">
-              HIRE TALENT NOW
-            </Link>
-            <Link to="/contact" className="border border-white/30 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold transition-all">
-              CONTACT US
-            </Link>
+            <Link to="/hire-talent" className="bg-white text-secondary hover:bg-black hover:text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl">HIRE TALENT NOW</Link>
+            <Link to="/contact" className="border border-white/30 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold transition-all">CONTACT US</Link>
           </div>
         </div>
       </section>
+
     </div>
   );
 };
