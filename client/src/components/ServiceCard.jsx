@@ -8,7 +8,7 @@ const ServiceCard = ({ icon: Icon, image, title, shortDesc, longDesc, highlights
     return (
         <motion.div 
             layout
-            className="group glass rounded-3xl overflow-hidden border border-white/10 hover:border-highlight/50 transition-all duration-500 flex flex-col shadow-lg hover:shadow-highlight/20"
+            className="group glass rounded-3xl overflow-hidden border border-white/10 hover:border-highlight/50 transition-all duration-500 flex flex-col min-h-[450px] shadow-lg hover:shadow-highlight/20"
             data-aos="zoom-in"
         >
             {/* Service Image Section */}
@@ -24,7 +24,7 @@ const ServiceCard = ({ icon: Icon, image, title, shortDesc, longDesc, highlights
                 </div>
             </div>
 
-            <div className="p-8 flex flex-col flex-grow">
+            <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-2xl font-bold text-white group-hover:text-highlight transition-colors leading-tight">
                         {title}
@@ -81,7 +81,7 @@ const ServiceCard = ({ icon: Icon, image, title, shortDesc, longDesc, highlights
                     )}
                 </AnimatePresence>
 
-                <div className="mt-auto pt-6 flex items-center justify-between">
+                <div className="mt-auto pt-4 flex items-center justify-between">
                     <button 
                         onClick={() => setIsExpanded(!isExpanded)}
                         className="text-xs font-black uppercase tracking-[0.2em] text-highlight flex items-center hover:text-white transition-colors"

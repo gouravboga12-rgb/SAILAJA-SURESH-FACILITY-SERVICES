@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero from '../components/Hero';
 import ServiceCard from '../components/ServiceCard';
 import IndustryCard from '../components/IndustryCard';
 import { Link } from 'react-router-dom';
+import * as LucideIcons from 'lucide-react';
 import {
   Users, UserCheck, Coffee, Package, Camera, Zap, Fan, Search,
   Building2, Factory, Warehouse, FlaskConical, Trophy, ShieldCheck,
@@ -10,126 +11,32 @@ import {
   TrendingUp, Phone, Mail, MessageSquare, Send, CheckCircle,
   ArrowRight, Sparkles, X, Check
 } from 'lucide-react';
+import { getServices, getSettings } from '../api';
 
 const Home = () => {
+  const [services, setServices] = useState([]);
+  const [settings, setSettings] = useState({});
+  const [loadingServices, setLoadingServices] = useState(true);
 
-  // ── SERVICES DATA ──────────────────────────────────────
-  const allServices = [
-    {
-      icon: Users,
-      image: "/images/housekeeping.png",
-      title: "Premium Facility Housekeeping",
-      shortDesc: "Professional staff for immaculate facility maintenance.",
-      longDesc: "Our housekeeping staff is trained in modern cleaning techniques, safety protocols, and guest relations to ensure your facility remains pristine at all times.",
-      highlights: [
-        "Daily floor scrubbing and specialized sanitation of high-touch surfaces.",
-        "Professional washroom hygiene management and restocking.",
-        "Waste segregation and eco-friendly disposal protocols.",
-        "Dusting and maintenance of intricate office fixtures and furniture.",
-        "Periodic deep cleaning of carpets, upholstery, and glass facades."
-      ]
-    },
-    {
-      icon: UserCheck,
-      image: "/images/production_support.png",
-      title: "Industrial Production Support",
-      shortDesc: "Skilled manpower for assembly lines and factory floors.",
-      longDesc: "Staff trained in industrial safety, machine operations assistance, and production line efficiency. We ensure our staff adheres to your specific SOPs.",
-      highlights: [
-        "Assisting in assembly line operations with high precision and speed.",
-        "On-floor material handling and raw material feeding to machines.",
-        "Quality check assistance and packaging of finished goods.",
-        "Maintaining production floor cleanliness and safety compliance.",
-        "Assisting machine operators in setup and routine maintenance tasks."
-      ]
-    },
-    {
-      icon: Coffee,
-      image: "/images/pantry.png",
-      title: "Corporate Pantry & Hospitality",
-      shortDesc: "Dedicated staff for corporate pantry and refreshments.",
-      longDesc: "Professional pantry staff trained in hygiene, food handling, and corporate etiquette to manage your office refreshments and hospitality needs.",
-      highlights: [
-        "Managing tea/coffee vending machines and serving hot beverages.",
-        "Serving refreshments and snacks for corporate meetings and guests.",
-        "Maintaining pantry cleanliness, hygiene, and kitchenware sanitization.",
-        "Organizing and managing office lunch arrangements and catering.",
-        "Regular inventory checks and procurement of pantry essentials."
-      ]
-    },
-    {
-      icon: Search,
-      image: "/images/lab_technical_assistance.png",
-      title: "Laboratory Technical Assistance",
-      shortDesc: "Support staff for laboratory and technical testing areas.",
-      longDesc: "Assisting technicians in material handling, equipment cleaning, and sample management with strict adherence to safety and hygiene protocols.",
-      highlights: [
-        "Handling and organizing laboratory samples under technician guidance.",
-        "Cleaning and sterilizing lab equipment between sessions.",
-        "Maintaining chemical and material stock records accurately.",
-        "Supporting QC personnel in documentation and data entry tasks.",
-        "Ensuring lab hygiene per GMP and safety regulations."
-      ]
-    },
-    {
-      icon: Package,
-      image: "/images/packing.png",
-      title: "Packaging & Logistics Personnel",
-      shortDesc: "Reliable staff for packing, sorting, and logistics.",
-      longDesc: "Trained packing and sorting workforce to support your warehouse and logistics operations with speed, accuracy, and consistency.",
-      highlights: [
-        "High-speed manual packing with accuracy and quality standards.",
-        "Labeling and barcode scanning for warehouse inventory accuracy.",
-        "Bubble wrapping and protective cushioning for fragile items.",
-        "Weighing and dimensioning of finished packages for logistics.",
-        "Maintaining organized shipping zones and packing inventory."
-      ]
-    },
-    {
-      icon: Camera,
-      image: "/images/cctv_installation.png",
-      title: "Security & Surveillance (CCTV)",
-      shortDesc: "Comprehensive CCTV installation and network surveillance solutions.",
-      longDesc: "Professional end-to-end security solutions including strategic camera placement, advanced network configuration, and high-definition monitoring systems.",
-      highlights: [
-        "Full-scale site analysis for blind-spot-free surveillance coverage.",
-        "Expert installation of HD-IP and Analog cameras with night vision.",
-        "Centralized Monitoring System (CMS) & NVR/DVR storage configuration.",
-        "Seamless mobile integration for real-time remote viewing access.",
-        "Preventive maintenance including lens cleaning and wiring health checks."
-      ]
-    },
-    {
-      icon: Zap,
-      image: "/images/electrical.png",
-      title: "Electrical & Technical Maintenance",
-      shortDesc: "Skilled technicians for electrical and facility maintenance.",
-      longDesc: "Preventive maintenance, wiring repairs, fixture installations, and specialized filter cleaning for industrial and commercial systems.",
-      highlights: [
-        "Periodic inspection and testing of electrical panels and DB boards.",
-        "Repair and replacement of faulty wiring, switches, and fixtures.",
-        "Water filter and RO system maintenance and cartridge replacement.",
-        "Emergency breakdown response for minimal operational downtime.",
-        "Energy-efficient lighting upgrades and power optimization."
-      ]
-    },
-    {
-      icon: Fan,
-      image: "/images/hvac.png",
-      title: "HVAC Operations & Management",
-      shortDesc: "Air conditioning operations and preventive maintenance.",
-      longDesc: "Our AC technicians handle everything from routine servicing to emergency repairs, ensuring optimal climate control in your facility.",
-      highlights: [
-        "Regular cleaning and servicing of split and central AC units.",
-        "Gas refilling, coil cleaning, and filter replacement services.",
-        "Preventive maintenance schedules to extend equipment lifespan.",
-        "Diagnosis and repair of cooling capacity and drainage issues.",
-        "Installation support for new commercial AC systems."
-      ]
-    }
-  ];
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const [servicesRes, settingsRes] = await Promise.all([
+          getServices(),
+          getSettings()
+        ]);
+        setServices(servicesRes.data);
+        setSettings(settingsRes.data);
+      } catch (err) {
+        console.error("Error fetching home data:", err);
+      } finally {
+        setLoadingServices(false);
+      }
+    };
+    fetchHomeData();
+  }, []);
 
-  // ── ABOUT DATA ─────────────────────────────────────────
+  // ── ABOUT DATA (Static for now, but founder can be dynamic) ───
   const missionPoints = [
     "Provide reliable, trained, and efficient manpower to businesses of all sizes.",
     "Ensure quality service, timely deployment, and client satisfaction in every project.",
@@ -197,10 +104,34 @@ const Home = () => {
   // ── CONTACT STATE ──────────────────────────────────────
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    service: 'general',
+    message: ''
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSubmitted(true); }, 1500);
+
+    const whatsappNumber = "918897230178";
+    const text = `Hi, I am interested in your services.%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Interested In:* ${formData.service}%0A*Message:* ${formData.message}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${text}`;
+
+    try {
+      window.open(whatsappUrl, '_blank');
+    } catch (err) {
+      window.location.href = whatsappUrl;
+    }
+
+    setLoading(false);
+    setSubmitted(true);
+  };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
   };
   const contactDetails = [
     { icon: Phone, title: "Phone Number", value: "+91 8897230178", link: "tel:8897230178", desc: "Mon-Sat from 9am to 6pm." },
@@ -215,6 +146,7 @@ const Home = () => {
       {/* ══════════════════════════ HERO ══════════════════════════ */}
       <Hero />
 
+
       {/* ══════════════════════ SERVICES ══════════════════════════ */}
       <section id="services" className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -227,10 +159,29 @@ const Home = () => {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
-          {allServices.map((service, index) => (
-            <ServiceCard key={index} {...service} />
-          ))}
+          {loadingServices ? (
+            [1, 2, 3].map(i => (
+              <div key={i} className="h-64 bg-white/5 rounded-3xl animate-pulse"></div>
+            ))
+          ) : (
+            services.map((service, index) => {
+              const IconComp = LucideIcons[service.icon_name] || LucideIcons.Briefcase;
+              return (
+                <ServiceCard 
+                  key={service.id || index} 
+                  {...service} 
+                  icon={IconComp}
+                  shortDesc={service.short_desc}
+                  longDesc={service.long_desc}
+                  image={service.image_url}
+                />
+              );
+            })
+          )}
         </div>
+        {!loadingServices && services.length === 0 && (
+           <div className="text-center py-20 text-accent/40 italic">We are updating our service catalog. Check back soon.</div>
+        )}
         <div className="mt-12 text-center md:hidden" data-aos="fade-up">
           <Link to="/services" className="inline-flex items-center text-highlight font-bold hover:underline group">
             View All Services <span className="ml-2 transition-transform group-hover:translate-x-2">→</span>
@@ -262,7 +213,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
+ 
       {/* ══════════════════════ ABOUT ══════════════════════════════ */}
       <section id="about" className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16" data-aos="fade-up">
@@ -324,25 +275,38 @@ const Home = () => {
         </div>
 
         {/* Founder Message */}
-        <div className="glass p-10 md:p-14 rounded-[3rem] border border-secondary/20 relative overflow-hidden" data-aos="zoom-in">
+        <div className="glass p-8 md:p-14 rounded-[3rem] border border-secondary/20 relative overflow-hidden" data-aos="zoom-in">
           <div className="absolute top-0 right-0 w-64 h-64 bg-highlight/5 rounded-full blur-[80px]"></div>
-          <div className="relative z-10 flex flex-col items-center text-center space-y-6">
-            <h3 className="text-2xl md:text-4xl font-extrabold text-white">Meet Our Founder</h3>
-            <div className="w-20 h-1 bg-highlight rounded-full"></div>
-            <p className="text-accent text-lg italic font-serif max-w-3xl leading-relaxed">
-              "Our goal is not just to provide workers, but to provide specialists who take pride in their work. A clean and well-managed facility is the cornerstone of any successful business."
-            </p>
-            <div>
-              <p className="text-white font-bold text-xl uppercase tracking-widest">THATIKONDA SURESH GOUD</p>
-              <p className="text-highlight text-sm font-bold uppercase tracking-[0.2em] mt-1">Managing Director</p>
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
+            <div className="w-full md:w-1/3 shrink-0">
+               <div className="rounded-[2.5rem] overflow-hidden border border-white/20 shadow-2xl relative">
+                  <img 
+                    src={settings.founder_image_url || "https://images.unsplash.com/photo-1600880212340-02d956ea36d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"} 
+                    alt="Founder" 
+                    className="w-full h-80 object-cover transition-all duration-700" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+               </div>
             </div>
-            <div className="flex flex-wrap justify-center gap-4 pt-2">
-              <a href="tel:8897230178" className="flex items-center gap-2 text-white bg-secondary/20 px-5 py-3 rounded-full hover:bg-secondary transition-all text-sm font-bold"><Phone className="h-4 w-4" /> 8897230178</a>
-              <a href="mailto:goudsuresh540@gmail.com" className="flex items-center gap-2 text-white bg-secondary/20 px-5 py-3 rounded-full hover:bg-secondary transition-all text-sm font-bold"><Mail className="h-4 w-4" /> goudsuresh540@gmail.com</a>
+            <div className="flex-grow text-center md:text-left space-y-6">
+              <h3 className="text-2xl md:text-4xl font-extrabold text-white">Meet Our Founder</h3>
+              <div className="w-20 h-1 bg-highlight rounded-full mx-auto md:mx-0"></div>
+              <p className="text-accent text-lg italic font-serif leading-relaxed">
+                "Our goal is not just to provide workers, but to provide specialists who take pride in their work. A clean and well-managed facility is the cornerstone of any successful business."
+              </p>
+              <div>
+                <p className="text-white font-bold text-xl uppercase tracking-widest">THATIKONDA SURESH GOUD</p>
+                <p className="text-highlight text-sm font-bold uppercase tracking-[0.2em] mt-1">Managing Director</p>
+              </div>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
+                <a href="tel:8897230178" className="flex items-center gap-2 text-white bg-secondary/20 px-5 py-3 rounded-full hover:bg-secondary transition-all text-sm font-bold"><Phone className="h-4 w-4" /> 8897230178</a>
+                <a href="mailto:goudsuresh540@gmail.com" className="flex items-center gap-2 text-white bg-secondary/20 px-5 py-3 rounded-full hover:bg-secondary transition-all text-sm font-bold"><Mail className="h-4 w-4" /> goudsuresh540@gmail.com</a>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* ══════════════════════ INDUSTRIES ═════════════════════════ */}
       <section id="industries" className="py-24 bg-secondary/5 border-y border-secondary/10">
@@ -477,16 +441,37 @@ const Home = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Full Name</label>
-                        <input required type="text" placeholder="John Doe" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" />
+                        <input 
+                          id="name"
+                          required 
+                          type="text" 
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder="John Doe" 
+                          className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" 
+                        />
                       </div>
                       <div className="space-y-2">
                         <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Email Address</label>
-                        <input required type="email" placeholder="john@company.com" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" />
+                        <input 
+                          id="email"
+                          required 
+                          type="email" 
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="john@company.com" 
+                          className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" 
+                        />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Service Interest</label>
-                      <select className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all appearance-none cursor-pointer">
+                      <select 
+                        id="service"
+                        value={formData.service}
+                        onChange={handleChange}
+                        className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all appearance-none cursor-pointer"
+                      >
                         <option value="general">General Inquiry</option>
                         <option value="staffing">Staffing Solutions</option>
                         <option value="technical">Technical Maintenance</option>
@@ -495,7 +480,15 @@ const Home = () => {
                     </div>
                     <div className="space-y-2">
                       <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Your Message</label>
-                      <textarea required rows="5" placeholder="How can we help you today?" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30 resize-none"></textarea>
+                      <textarea 
+                        id="message"
+                        required 
+                        rows="5" 
+                        value={formData.message}
+                        onChange={handleChange}
+                        placeholder="How can we help you today?" 
+                        className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30 resize-none"
+                      ></textarea>
                     </div>
                     <button
                       disabled={loading}

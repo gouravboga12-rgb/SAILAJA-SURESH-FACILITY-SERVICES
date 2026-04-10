@@ -1,18 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Target, Eye, Heart, Award, CheckCircle2, Users, ShieldCheck,
   Clock, TrendingUp, MapPin, Star, Handshake, Zap, FlaskConical,
   Factory, Building2, UserCheck, Trophy, Phone, Mail, ArrowRight
 } from 'lucide-react';
+import { getSettings } from '../api';
 
 const About = () => {
+  const [settings, setSettings] = useState({});
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const res = await getSettings();
+        setSettings(res.data);
+      } catch (err) {
+        console.error("Error fetching about settings:", err);
+      }
+    };
+    fetchAboutData();
+  }, []);
 
   const missionPoints = [
     "To provide reliable, trained, and efficient manpower to businesses of all sizes.",
     "To ensure quality service, timely deployment, and client satisfaction in every project.",
     "To support industries with cost-effective staffing solutions without compromising quality.",
   ];
+// ... [keeping existing static data] ...
 
   const visionPoints = [
     "To become the leading manpower service provider in Telangana.",
@@ -131,9 +146,9 @@ const About = () => {
             <div className="relative" data-aos="fade-left">
               <div className="rounded-3xl overflow-hidden border border-secondary/20 shadow-2xl relative z-10">
                 <img
-                  src="https://images.unsplash.com/photo-1600880212340-02d956ea36d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                  src={settings.founder_image_url || "https://images.unsplash.com/photo-1600880212340-02d956ea36d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
                   alt="Founder and Vision"
-                  className="w-full grayscale hover:grayscale-0 transition-all duration-700"
+                  className="w-full transition-all duration-700"
                 />
               </div>
               <div className="absolute -bottom-8 -right-8 bg-secondary p-8 rounded-3xl shadow-2xl z-20 hidden md:block border border-highlight/20">
@@ -347,6 +362,15 @@ const About = () => {
           <div className="absolute top-0 right-0 w-64 h-64 bg-highlight/5 rounded-full blur-[80px]"></div>
           <div className="relative z-10 flex flex-col items-center text-center space-y-8">
             <h3 className="text-3xl md:text-5xl font-extrabold text-white">MEET OUR FOUNDER</h3>
+            
+            <div className="w-56 h-56 rounded-[2.5rem] overflow-hidden border border-white/20 shadow-2xl">
+              <img 
+                src={settings.founder_image_url || "https://images.unsplash.com/photo-1600880212340-02d956ea36d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"} 
+                alt="Managing Director" 
+                className="w-full h-full object-cover transition-all duration-700"
+              />
+            </div>
+
             <div className="w-24 h-1 bg-highlight rounded-full"></div>
             <p className="text-accent text-xl italic font-serif max-w-3xl leading-relaxed">
               "Our goal is not just to provide workers, but to provide specialists who take pride in their work. We believe that a clean and well-managed facility is the cornerstone of any successful business."

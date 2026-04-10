@@ -1,130 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ServiceCard from '../components/ServiceCard';
+import * as LucideIcons from 'lucide-react';
 import { 
   Users, Home, UserCheck, Coffee, Package, Wifi, Camera, Zap, Fan, 
-  Search, ShieldCheck, HeartPulse
+  Search, ShieldCheck, HeartPulse, Loader2, Briefcase
 } from 'lucide-react';
-
-// Service Images
-import housekeepingImg from '../assets/services/housekeeping.png';
-import pantryImg from '../assets/services/pantry_boy.png';
-import packingImg from '../assets/services/packing_staff.png';
+import { getServices } from '../api';
 
 const Services = () => {
-  const servicesList = [
-    {
-      icon: Users,
-      image: housekeepingImg,
-      title: "Premium Facility Housekeeping",
-      shortDesc: "Trained housekeeping boys and ladies for facility maintenance.",
-      longDesc: "Complete sanitation, floor care, washroom hygiene, and waste management. We use eco-friendly chemicals and modern machinery to maintain high standards of cleanliness.",
-      highlights: [
-        "Daily floor scrubbing and specialized sanitation of high-touch surfaces.",
-        "Professional washroom hygiene management and restocking.",
-        "Waste segregation and eco-friendly disposal protocols.",
-        "Dusting and maintenance of intricate office fixtures and furniture.",
-        "Periodic deep cleaning of carpets, upholstery, and glass facades."
-      ]
-    },
-    {
-      icon: UserCheck,
-      image: "/images/production_support.png",
-      title: "Industrial Production Support",
-      shortDesc: "Skilled manpower for assembly lines and factory floors.",
-      longDesc: "Staff trained in industrial safety, machine operations assistance, and production line efficiency. We ensure our staff adheres to your specific SOPs.",
-      highlights: [
-        "Assisting in assembly line operations with high precision and speed.",
-        "On-floor material handling and raw material feeding to machines.",
-        "Quality check assistance and packaging of finished goods.",
-        "Maintaining production floor cleanliness and safety compliance.",
-        "Assisting machine operators in setup and routine maintenance tasks."
-      ]
-    },
-    {
-      icon: Search,
-      image: "/images/lab_technical_assistance.png",
-      title: "Laboratory Technical Assistance",
-      shortDesc: "Support staff for laboratory and technical testing areas.",
-      longDesc: "Assisting technicians in material handling, equipment cleaning, and sample management with strict adherence to safety and hygiene protocols.",
-      highlights: [
-        "Cleaning and sterilization of laboratory glassware and equipment.",
-        "Assisting technicians in preparing samples and basic experiments.",
-        "Safe handling and storage of laboratory chemicals and specimens.",
-        "Maintaining laboratory logs and inventory management assistance.",
-        "Ensuring workspace decontamination and technical safety standards."
-      ]
-    },
-    {
-      icon: Coffee,
-      image: pantryImg,
-      title: "Corporate Pantry & Hospitality",
-      shortDesc: "Professional staff for office refreshments and hospitality.",
-      longDesc: "Managing beverage machines, serving tea/coffee, maintaining pantry hygiene, and assisting in corporate lunch arrangements.",
-      highlights: [
-        "Managing tea/coffee vending machines and serving hot beverages.",
-        "Serving refreshments and snacks for corporate meetings and guests.",
-        "Maintaining pantry cleanliness, hygiene, and kitchenware sanitization.",
-        "Organizing and managing office lunch arrangements and catering.",
-        "Regular inventory checks and procurement of pantry essentials."
-      ]
-    },
-    {
-      icon: Package,
-      image: packingImg,
-      title: "Packaging & Logistics Personnel",
-      shortDesc: "Efficient ladies and boys for packaging and labeling.",
-      longDesc: "Meticulous staff for assembly, bubble wrapping, manual labeling, and carton packing for logistics and manufacturing units.",
-      highlights: [
-        "Skilled manual assembly and secure packaging of products.",
-        "Precise labeling, barcoding, and scanning of export/local cartons.",
-        "Bubble wrapping and protective cushioning for fragile items.",
-        "Weighing and dimensioning of finished packages for logistics.",
-        "Maintaining organized shipping zones and packing inventory."
-      ]
-    },
-    {
-      icon: Camera,
-      image: "/images/cctv_installation.png",
-      title: "Security & Surveillance (CCTV)",
-      shortDesc: "Comprehensive CCTV installation and integrated network surveillance solutions.",
-      longDesc: "We provide professional end-to-end security solutions including strategic camera placement, advanced network configuration, and high-definition monitoring systems to safeguard your premises 24/7.",
-      highlights: [
-        "Full-scale site analysis for blind-spot-free surveillance coverage.",
-        "Expert installation of HD-IP and Analog cameras with night vision.",
-        "Centralized Monitoring System (CMS) & NVR/DVR storage configuration.",
-        "Seamless mobile integration for real-time remote viewing access.",
-        "Preventive maintenance including lens cleaning and wiring health checks."
-      ]
-    },
-    {
-      icon: Zap,
-      image: "/images/electrical.png",
-      title: "Electrical & Technical Maintenance",
-      shortDesc: "Skilled technicians for electrical and plumbing maintenance.",
-      longDesc: "Preventive maintenance, wiring repairs, fixture installations, and specialized filter cleaning for industrial and commercial water systems.",
-      highlights: [
-        "Troubleshooting electrical faults and wiring repair works.",
-        "Installation of lights, fans, and modular switchboard fixtures.",
-        "Periodic cleaning and replacement of industrial water filters.",
-        "Monitoring electrical load and ensuring fuse/MCB safety.",
-        "Preventive maintenance of motor pumps and control panels."
-      ]
-    },
-    {
-      icon: Fan,
-      image: "/images/hvac.png",
-      title: "HVAC Operations & Management",
-      shortDesc: "Specialized staff for air conditioning and ventilation systems.",
-      longDesc: "AHU maintenance, chiller plant operation, temperature monitoring, and scheduled servicing of central air conditioning units.",
-      highlights: [
-        "Monitoring and controlling centralized AHU performance.",
-        "Routine chiller plant checks and temperature log maintenance.",
-        "Cleaning and replacement of AC filters for optimal air quality.",
-        "Identifying and repairing refrigerant leaks and duct issues.",
-        "Coordinating seasonal preventive maintenance for large HVAC units."
-      ]
-    }
-  ];
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await getServices();
+        setServices(res.data);
+      } catch (err) {
+        console.error("Error fetching services:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+  }, []);
 
   return (
     <div className="bg-black pt-32 pb-24">
@@ -144,11 +43,34 @@ const Services = () => {
       {/* Services Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
-          {servicesList.map((service, index) => (
-            <ServiceCard key={index} {...service} />
-          ))}
+          {loading ? (
+            [1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="h-80 bg-white/5 rounded-[2.5rem] animate-pulse border border-white/10"></div>
+            ))
+          ) : (
+            services.map((service, index) => {
+              const IconComp = LucideIcons[service.icon_name] || LucideIcons.Briefcase;
+              return (
+                <ServiceCard 
+                  key={service.id || index} 
+                  {...service} 
+                  icon={IconComp}
+                  shortDesc={service.short_desc}
+                  longDesc={service.long_desc}
+                  image={service.image_url}
+                />
+              );
+            })
+          )}
         </div>
+        {!loading && services.length === 0 && (
+          <div className="text-center py-32 glass rounded-[3rem] border border-dashed border-white/10">
+            <Briefcase className="h-16 w-16 text-accent/10 mx-auto mb-6" />
+            <p className="text-accent/40 font-black uppercase tracking-[0.2em]">Our service catalog is currently expanding. Please check back later.</p>
+          </div>
+        )}
       </section>
+
 
       {/* Quality Commitment Bar */}
       <section className="mt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

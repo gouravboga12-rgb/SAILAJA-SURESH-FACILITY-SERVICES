@@ -4,15 +4,37 @@ import { Send, Users, Building, Phone, Briefcase, MapPin, MessageSquare, CheckCi
 const HireTalent = () => {
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        company: '',
+        person: '',
+        phone: '',
+        service: '',
+        count: '',
+        location: '',
+        message: ''
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setLoading(false);
-            setSubmitted(true);
-        }, 1500);
+
+        const whatsappNumber = "918897230178";
+        const text = `*New Recruitment Request*%0A%0A*Company:* ${formData.company}%0A*Contact Person:* ${formData.person}%0A*Phone:* ${formData.phone}%0A*Service:* ${formData.service}%0A*Staff Count:* ${formData.count}%0A*Location:* ${formData.location}%0A*Requirements:* ${formData.message}`;
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${text}`;
+
+        try {
+            window.open(whatsappUrl, '_blank');
+        } catch (err) {
+            window.location.href = whatsappUrl;
+        }
+
+        setLoading(false);
+        setSubmitted(true);
+    };
+
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
     };
 
     if (submitted) {
@@ -67,8 +89,11 @@ const HireTalent = () => {
                                     <div className="relative">
                                         <Building className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary" />
                                         <input 
+                                            id="company"
                                             required
                                             type="text" 
+                                            value={formData.company}
+                                            onChange={handleChange}
                                             placeholder="e.g. Acme Corp" 
                                             className="w-full bg-black/50 border border-secondary/20 rounded-xl py-4 pl-12 pr-4 text-white focus:border-highlight outline-none transition-all"
                                         />
@@ -80,8 +105,11 @@ const HireTalent = () => {
                                     <div className="relative">
                                         <Users className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary" />
                                         <input 
+                                            id="person"
                                             required
                                             type="text" 
+                                            value={formData.person}
+                                            onChange={handleChange}
                                             placeholder="Your Name" 
                                             className="w-full bg-black/50 border border-secondary/20 rounded-xl py-4 pl-12 pr-4 text-white focus:border-highlight outline-none transition-all"
                                         />
@@ -96,8 +124,11 @@ const HireTalent = () => {
                                     <div className="relative">
                                         <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary" />
                                         <input 
+                                            id="phone"
                                             required
                                             type="tel" 
+                                            value={formData.phone}
+                                            onChange={handleChange}
                                             placeholder="8897230178" 
                                             className="w-full bg-black/50 border border-secondary/20 rounded-xl py-4 pl-12 pr-4 text-white focus:border-highlight outline-none transition-all"
                                         />
@@ -109,10 +140,13 @@ const HireTalent = () => {
                                     <div className="relative">
                                         <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary" />
                                         <select 
+                                            id="service"
                                             required
+                                            value={formData.service}
+                                            onChange={handleChange}
                                             className="w-full bg-black/50 border border-secondary/20 rounded-xl py-4 pl-12 pr-4 text-white focus:border-highlight outline-none transition-all appearance-none"
                                         >
-                                            <option value="" disabled selected>Select Service</option>
+                                            <option value="" disabled>Select Service</option>
                                             <option value="housekeeping">Housekeeping</option>
                                             <option value="production">Production Boys</option>
                                             <option value="pantry">Pantry Boys</option>
@@ -131,8 +165,11 @@ const HireTalent = () => {
                                     <div className="relative">
                                         <Users className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary" />
                                         <input 
+                                            id="count"
                                             required
                                             type="number" 
+                                            value={formData.count}
+                                            onChange={handleChange}
                                             placeholder="e.g. 5" 
                                             className="w-full bg-black/50 border border-secondary/20 rounded-xl py-4 pl-12 pr-4 text-white focus:border-highlight outline-none transition-all"
                                         />
@@ -144,8 +181,11 @@ const HireTalent = () => {
                                     <div className="relative">
                                         <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary" />
                                         <input 
+                                            id="location"
                                             required
                                             type="text" 
+                                            value={formData.location}
+                                            onChange={handleChange}
                                             placeholder="e.g. Hyderabad" 
                                             className="w-full bg-black/50 border border-secondary/20 rounded-xl py-4 pl-12 pr-4 text-white focus:border-highlight outline-none transition-all"
                                         />
@@ -159,7 +199,10 @@ const HireTalent = () => {
                                 <div className="relative">
                                     <MessageSquare className="absolute left-4 top-4 h-5 w-5 text-secondary" />
                                     <textarea 
+                                        id="message"
                                         rows="4"
+                                        value={formData.message}
+                                        onChange={handleChange}
                                         placeholder="Describe your specific requirements..." 
                                         className="w-full bg-black/50 border border-secondary/20 rounded-xl py-4 pl-12 pr-4 text-white focus:border-highlight outline-none transition-all"
                                     ></textarea>
@@ -218,13 +261,6 @@ const HireTalent = () => {
                             </ul>
                         </div>
                         
-                        <div className="bg-secondary p-8 rounded-[2rem] text-center shadow-2xl">
-                             <p className="text-white font-bold text-lg mb-2">Need Help Deciding?</p>
-                             <p className="text-white/70 text-sm mb-6">Our experts can help you calculate the exact number of staff needed for your facility.</p>
-                             <a href="tel:8897230178" className="inline-block bg-white text-secondary px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-all">
-                                 CALL ADVISOR
-                             </a>
-                        </div>
                     </div>
                 </div>
             </section>

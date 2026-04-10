@@ -4,14 +4,34 @@ import { Phone, Mail, MapPin, MessageSquare, Send, CheckCircle, Clock } from 'lu
 const Contact = () => {
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        service: 'general',
+        message: ''
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            setSubmitted(true);
-        }, 1500);
+
+        const whatsappNumber = "918897230178";
+        const text = `Hi, I am interested in your services.%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Interested In:* ${formData.service}%0A*Message:* ${formData.message}`;
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${text}`;
+
+        try {
+            window.open(whatsappUrl, '_blank');
+        } catch (err) {
+            window.location.href = whatsappUrl; // Secondary fallback
+        }
+
+        setLoading(false);
+        setSubmitted(true);
+    };
+
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
     };
 
     const contactDetails = [
@@ -132,17 +152,38 @@ const Contact = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Full Name</label>
-                                        <input required type="text" placeholder="John Doe" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" />
+                                        <input 
+                                            id="name"
+                                            required 
+                                            type="text" 
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            placeholder="John Doe" 
+                                            className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" 
+                                        />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Email Address</label>
-                                        <input required type="email" placeholder="john@company.com" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" />
+                                        <input 
+                                            id="email"
+                                            required 
+                                            type="email" 
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            placeholder="john@company.com" 
+                                            className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30" 
+                                        />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
                                     <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Service Interest</label>
-                                    <select className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all appearance-none cursor-pointer">
+                                    <select 
+                                        id="service"
+                                        value={formData.service}
+                                        onChange={handleChange}
+                                        className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all appearance-none cursor-pointer"
+                                    >
                                         <option value="general">General Inquiry</option>
                                         <option value="staffing">Staffing Solutions</option>
                                         <option value="technical">Technical Maintenance</option>
@@ -152,7 +193,15 @@ const Contact = () => {
 
                                 <div className="space-y-2">
                                     <label className="text-white text-xs font-bold uppercase tracking-wider ml-1">Your Message</label>
-                                    <textarea required rows="6" placeholder="How can we help you today?" className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30 resize-none"></textarea>
+                                    <textarea 
+                                        id="message"
+                                        required 
+                                        rows="6" 
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        placeholder="How can we help you today?" 
+                                        className="w-full bg-black/40 border border-secondary/20 rounded-2xl p-5 text-white focus:border-highlight outline-none transition-all placeholder:text-accent/30 resize-none"
+                                    ></textarea>
                                 </div>
 
                                 <button 

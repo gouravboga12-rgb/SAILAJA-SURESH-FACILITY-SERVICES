@@ -16,6 +16,7 @@ import Industries from './pages/Industries';
 import Locations from './pages/Locations';
 import HireTalent from './pages/HireTalent';
 import Contact from './pages/Contact';
+import Admin from './pages/Admin';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -26,7 +27,10 @@ const ScrollToTop = () => {
   return null;
 };
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith('/admin');
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -36,26 +40,34 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <div className="min-h-screen bg-black flex flex-col overflow-x-hidden w-full relative">
       <ScrollToTop />
-      <div className="min-h-screen bg-black flex flex-col overflow-x-hidden w-full relative">
-        <Navbar />
-        <main className="flex-grow w-full">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/industries" element={<Industries />} />
-            <Route path="/locations" element={<Locations />} />
-            <Route path="/hire-talent" element={<HireTalent />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </main>
-        <Footer />
-        <WhatsAppButton />
-      </div>
+      {!isAdminPage && <Navbar />}
+      <main className="flex-grow w-full">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/industries" element={<Industries />} />
+          <Route path="/locations" element={<Locations />} />
+          <Route path="/hire-talent" element={<HireTalent />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
+      </main>
+      {!isAdminPage && <Footer />}
+      {!isAdminPage && <WhatsAppButton />}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
 
 export default App;
+
