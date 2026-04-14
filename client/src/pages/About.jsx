@@ -121,7 +121,7 @@ const About = () => {
       <Helmet>
         <title>About Us | S S Facility Services</title>
         <meta name="description" content="Discover S S Facility Services' journey, mission, and vision. Founded by Thatikonda Suresh Goud, we are leaders in staffing and facility solutions in Telangana." />
-        <link rel="canonical" href="https://www.ssfacilityservices.in/about" />
+        <link rel="canonical" href="https://ssfacilityservice.com/about" />
       </Helmet>
       {/* === HERO SECTION WITH BACKGROUND === */}
       <section className="relative mb-24 overflow-hidden">

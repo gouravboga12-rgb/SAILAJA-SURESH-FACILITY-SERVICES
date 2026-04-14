@@ -69,7 +69,7 @@ const HireTalent = () => {
             <Helmet>
                 <title>Hire Talent | S S Facility Services</title>
                 <meta name="description" content="Looking for reliable manpower? Submit your staffing requirements and hire skilled talent for housekeeping, production, and technical roles today." />
-                <link rel="canonical" href="https://www.ssfacilityservices.in/hire-talent" />
+                <link rel="canonical" href="https://ssfacilityservice.com/hire-talent" />
             </Helmet>
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
                 <h2 className="text-secondary font-bold tracking-[0.4em] uppercase mb-4" data-aos="fade-up">

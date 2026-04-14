@@ -162,7 +162,7 @@ const Home = () => {
       <Helmet>
         <title>S S Facility Services | Premium Staffing & Facility Management</title>
         <meta name="description" content="Leading manpower staffing and facility management solutions in Hyderabad. We provide professional housekeeping, pantry, and industrial labor services." />
-        <link rel="canonical" href="https://www.ssfacilityservices.in/" />
+        <link rel="canonical" href="https://ssfacilityservice.com/" />
       </Helmet>
 
       {/* ══════════════════════════ HERO ══════════════════════════ */}

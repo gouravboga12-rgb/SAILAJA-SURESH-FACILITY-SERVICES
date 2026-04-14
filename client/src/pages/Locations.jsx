@@ -86,7 +86,7 @@ const Locations = () => {
       <Helmet>
         <title>Our Locations | S S Facility Services</title>
         <meta name="description" content="S S Facility Services operates across major industrial hubs in Telangana, including Genome Valley, Medchal-Malkajgiri, and Siddipet." />
-        <link rel="canonical" href="https://www.ssfacilityservices.in/locations" />
+        <link rel="canonical" href="https://ssfacilityservice.com/locations" />
       </Helmet>
 
       {/* === HERO SECTION === */}

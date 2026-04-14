@@ -93,7 +93,7 @@ const Contact = () => {
             <Helmet>
                 <title>Contact Us | S S Facility Services</title>
                 <meta name="description" content="Reach out to S S Facility Services for professional staffing and facility management inquiries. Get a custom quote for your business needs today." />
-                <link rel="canonical" href="https://www.ssfacilityservices.in/contact" />
+                <link rel="canonical" href="https://ssfacilityservice.com/contact" />
             </Helmet>
             {/* === HERO SECTION WITH BACKGROUND === */}
             <section className="relative mb-24 overflow-hidden">

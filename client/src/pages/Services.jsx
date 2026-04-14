@@ -37,7 +37,7 @@ const Services = () => {
       <Helmet>
         <title>Our Services | S S Facility Services</title>
         <meta name="description" content="Explore our wide range of professional services: Housekeeping, Industrial Manpower, Pantry Staff, Lab Assistants, HVAC Maintenance, and more." />
-        <link rel="canonical" href="https://www.ssfacilityservices.in/services" />
+        <link rel="canonical" href="https://ssfacilityservice.com/services" />
       </Helmet>
       {/* Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 text-center">
