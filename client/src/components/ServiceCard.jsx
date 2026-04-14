@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
-import { ChevronRight, Plus, Minus, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, Plus, Minus, CheckCircle2, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ServiceCard = ({ icon: Icon, image, title, shortDesc, longDesc, highlights = [] }) => {
+const ServiceCard = ({ icon: Icon, image, images = [], title, shortDesc, longDesc, highlights = [] }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    // Combine legacy image and new images array
+    const allImages = images.length > 0 ? images : (image ? [image] : []);
+
+    const nextImage = (e) => {
+        e.stopPropagation();
+        setCurrentIndex((prev) => (prev + 1) % allImages.length);
+    };
+
+    const prevImage = (e) => {
+        e.stopPropagation();
+        setCurrentIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
+    };
 
     return (
         <motion.div 
@@ -11,15 +25,55 @@ const ServiceCard = ({ icon: Icon, image, title, shortDesc, longDesc, highlights
             className="group glass rounded-3xl overflow-hidden border border-white/10 hover:border-highlight/50 transition-all duration-500 flex flex-col min-h-[450px] shadow-lg hover:shadow-highlight/20"
             data-aos="zoom-in"
         >
-            {/* Service Image Section */}
-            <div className="relative h-48 overflow-hidden">
-                <img 
-                    src={image} 
-                    alt={title} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div className="absolute bottom-4 left-6 p-2 bg-highlight/20 backdrop-blur-md rounded-xl text-white border border-white/20">
+            {/* Service Image Carousel Section (Instagram Style) */}
+            <div className="relative h-64 overflow-hidden bg-black/50 group/carousel">
+                <AnimatePresence mode="wait">
+                    <motion.img 
+                        key={currentIndex}
+                        src={allImages[currentIndex]} 
+                        alt={`${title} ${currentIndex + 1}`} 
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className="w-full h-full object-cover"
+                    />
+                </AnimatePresence>
+
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+
+                {/* Navigation Arrows */}
+                {allImages.length > 1 && (
+                    <>
+                        <button 
+                            onClick={prevImage}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full glass border border-white/20 flex items-center justify-center text-white opacity-0 group-hover/carousel:opacity-100 transition-opacity z-20 hover:bg-highlight/40"
+                        >
+                            <ChevronLeft className="h-5 w-5" />
+                        </button>
+                        <button 
+                            onClick={nextImage}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full glass border border-white/20 flex items-center justify-center text-white opacity-0 group-hover/carousel:opacity-100 transition-opacity z-20 hover:bg-highlight/40"
+                        >
+                            <ChevronRight className="h-5 w-5" />
+                        </button>
+                    </>
+                )}
+
+                {/* Instagram-style Dot Indicators */}
+                {allImages.length > 1 && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                        {allImages.map((_, idx) => (
+                            <div 
+                                key={idx}
+                                className={`h-1.5 transition-all duration-300 rounded-full ${idx === currentIndex ? 'w-4 bg-highlight' : 'w-1.5 bg-white/40'}`}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                <div className="absolute top-4 left-6 p-2 bg-highlight/20 backdrop-blur-md rounded-xl text-white border border-white/20 z-20">
                     <Icon className="h-6 w-6" />
                 </div>
             </div>

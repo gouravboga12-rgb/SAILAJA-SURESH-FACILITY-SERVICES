@@ -184,12 +184,14 @@ const Home = () => {
               const IconComp = LucideIcons[service.icon_name] || LucideIcons.Briefcase;
               return (
                 <ServiceCard 
-                  key={service.id || index} 
-                  {...service} 
-                  icon={IconComp}
-                  shortDesc={service.short_desc}
+                  key={service.id}
+                  icon={IconComp} 
+                  image={service.image_url} 
+                  images={service.image_urls}
+                  title={service.title} 
+                  shortDesc={service.short_desc} 
                   longDesc={service.long_desc}
-                  image={service.image_url}
+                  highlights={service.highlights}
                 />
               );
             })

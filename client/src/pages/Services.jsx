@@ -64,6 +64,7 @@ const Services = () => {
                   shortDesc={service.short_desc}
                   longDesc={service.long_desc}
                   image={service.image_url}
+                  images={service.image_urls}
                 />
               );
             })

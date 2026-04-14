@@ -38,7 +38,7 @@ const Admin = () => {
     long_desc: '',
     highlights: [''],
     icon_name: 'Users',
-    image_url: ''
+    image_urls: []
   });
 
   useEffect(() => {
@@ -103,7 +103,7 @@ const Admin = () => {
         long_desc: '',
         highlights: [''],
         icon_name: 'Users',
-        image_url: ''
+        image_urls: []
       });
       fetchData();
     } catch (err) {
@@ -121,7 +121,7 @@ const Admin = () => {
       long_desc: service.long_desc || '',
       highlights: service.highlights || [''],
       icon_name: service.icon_name || 'Users',
-      image_url: service.image_url || ''
+      image_urls: service.image_urls || (service.image_url ? [service.image_url] : [])
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -178,44 +178,51 @@ const Admin = () => {
     }
   };
 
-  const handleFileUpload = async (file) => {
+  const handleMultiFileUpload = async (files) => {
     try {
       setUploading(true);
       setError(null);
+      const newUrls = [];
 
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      for (const file of files) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const filePath = `${fileName}`;
 
-      const { error: uploadError, data } = await supabase.storage
-        .from('images')
-        .upload(filePath, file);
+        const { error: uploadError } = await supabase.storage
+          .from('images')
+          .upload(filePath, file);
 
-      if (uploadError) {
-        throw uploadError;
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('images')
+          .getPublicUrl(filePath);
+        
+        newUrls.push(publicUrl);
       }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('images')
-        .getPublicUrl(filePath);
-
-      return publicUrl;
+      return newUrls;
     } catch (err) {
-      console.error('Error uploading image:', err);
-      setError('Failed to upload image. Please try again.');
-      return null;
+      console.error('Error uploading images:', err);
+      setError('Failed to upload images. Please try again.');
+      return [];
     } finally {
       setUploading(false);
     }
   };
 
+  const removeImage = (index) => {
+    const updatedUrls = form.image_urls.filter((_, i) => i !== index);
+    setForm({ ...form, image_urls: updatedUrls });
+  };
+
   const handleUpdateFounderImage = async (newUrl) => {
-    if (!newUrl) return;
     try {
       setLoading(true);
       await updateSetting('founder_image_url', newUrl);
       setSettings({ ...settings, founder_image_url: newUrl });
-      showSuccess('Founder image updated successfully!');
+      showSuccess(newUrl ? 'Founder image updated successfully!' : 'Founder image removed!');
     } catch (err) {
       setError('Failed to update founder image');
     } finally {
@@ -390,18 +397,22 @@ const Admin = () => {
                   </div>
 
                   <div className="space-y-4 pt-2">
-                    <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest block">Service Media</label>
+                    <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest block">Service Media (Multi-photo Support)</label>
                     <div className="flex flex-col gap-4">
-                      {form.image_url && (
-                        <div className="relative group w-full h-40 rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
-                          <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" />
-                          <button 
-                            type="button"
-                            onClick={() => setForm({...form, image_url: ''})}
-                            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                      {form.image_urls && form.image_urls.length > 0 && (
+                        <div className="grid grid-cols-3 gap-2">
+                          {form.image_urls.map((url, idx) => (
+                            <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden border border-slate-200">
+                              <img src={url} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
+                              <button 
+                                type="button"
+                                onClick={() => removeImage(idx)}
+                                className="absolute top-1 right-1 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ))}
                         </div>
                       )}
                       
@@ -418,7 +429,7 @@ const Admin = () => {
                             <Upload className="h-6 w-6 text-slate-400 group-hover:text-highlight transition-all" />
                           )}
                           <span className="text-[10px] font-black uppercase text-slate-500 group-hover:text-slate-900 transition-all">
-                            {uploading ? 'Uploading...' : 'Upload Image'}
+                            {uploading ? 'Uploading...' : 'Add Photos'}
                           </span>
                         </button>
                         
@@ -426,12 +437,13 @@ const Admin = () => {
                           type="file"
                           ref={fileInputRef}
                           hidden
+                          multiple
                           accept="image/*"
                           onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              const url = await handleFileUpload(file);
-                              if (url) setForm({ ...form, image_url: url });
+                            const files = Array.from(e.target.files || []);
+                            if (files.length > 0) {
+                              const urls = await handleMultiFileUpload(files);
+                              setForm({ ...form, image_urls: [...form.image_urls, ...urls] });
                             }
                           }}
                         />
@@ -442,10 +454,19 @@ const Admin = () => {
                           <LinkIcon className="h-4 w-4 text-slate-400" />
                         </div>
                         <input 
-                          value={form.image_url}
-                          onChange={(e) => setForm({...form, image_url: e.target.value})}
+                          id="manual-url"
                           className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 focus:border-highlight outline-none text-xs"
-                          placeholder="Or paste an image link here..."
+                          placeholder="Paste an image link to add..."
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              const val = e.target.value;
+                              if (val) {
+                                setForm({ ...form, image_urls: [...form.image_urls, val] });
+                                e.target.value = '';
+                              }
+                            }
+                          }}
                         />
                       </div>
                     </div>
@@ -467,7 +488,7 @@ const Admin = () => {
                         type="button"
                         onClick={() => {
                           setEditingId(null);
-                          setForm({ title: '', short_desc: '', long_desc: '', highlights: [''], icon_name: 'Users', image_url: '' });
+                          setForm({ title: '', short_desc: '', long_desc: '', highlights: [''], icon_name: 'Users', image_urls: [] });
                         }}
                         className="flex-1 bg-slate-100 border border-slate-200 text-slate-900 font-bold py-4 rounded-xl hover:bg-slate-200 transition-all text-sm"
                       >
@@ -559,12 +580,21 @@ const Admin = () => {
                 </h4>
                 
                 <div className="flex flex-col md:flex-row gap-8 items-start">
-                  <div className="w-full md:w-48 h-48 rounded-3xl overflow-hidden border border-slate-200 shadow-inner shrink-0 bg-slate-100">
+                  <div className="w-full md:w-48 h-48 rounded-3xl overflow-hidden border border-slate-200 shadow-inner shrink-0 bg-slate-100 relative group">
                     <img 
                       src={settings.founder_image_url || 'https://via.placeholder.com/300'} 
                       alt="Founder Preview"
                       className="w-full h-full object-cover"
                     />
+                    {settings.founder_image_url && (
+                      <button 
+                        onClick={() => handleUpdateFounderImage('')}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg"
+                        title="Remove Photo"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
                   
                   <div className="flex-grow space-y-6 w-full">
@@ -588,12 +618,14 @@ const Admin = () => {
                            hidden
                            accept="image/*"
                            onChange={async (e) => {
-                             const file = e.target.files?.[0];
-                             if (file) {
-                               const url = await handleFileUpload(file);
-                               if (url) handleUpdateFounderImage(url);
-                             }
-                           }}
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const urls = await handleMultiFileUpload([file]);
+                              if (urls && urls.length > 0) {
+                                handleUpdateFounderImage(urls[0]);
+                              }
+                            }
+                          }}
                          />
                        </div>
 
